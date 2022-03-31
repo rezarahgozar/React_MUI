@@ -30,7 +30,9 @@ const genderItems = [
   { id: "female", title: "Female" },
   { id: "other", title: "Other" },
 ];
-const EmployeeForm = () => {
+const EmployeeForm = (props) => {
+
+    const {addOrEdit,recordForEdit} = props;
 
     const validate = (fieldValues = values) => {
         let temp = {...errors}
@@ -64,10 +66,19 @@ const EmployeeForm = () => {
     e.preventDefault();
     //console.log(values);
       if(validate()){
-        employeeService.insertEmployee(values)
-        resetForm();
+        // employeeService.insertEmployee(values)
+        // resetForm();
+        addOrEdit(values,resetForm);
+
       }
   }
+
+useEffect(()=>{
+if(recordForEdit != null)
+  setValues({
+    ...recordForEdit
+  })
+},[recordForEdit])
 
   return (
     <>

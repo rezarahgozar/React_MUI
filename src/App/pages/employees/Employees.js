@@ -18,10 +18,6 @@ const Employees = () => {
   const classes = useStyles();
   const [records,setRecords] = useState(employeeService.getAllEmployees());
 
-  const addOrEdit = (employee,resetForm) => {
-    
-  }
-
   return (
     <>
       <PageHeader

@@ -1,5 +1,5 @@
 import { InputAdornment, Paper, TableBody, Toolbar } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import useTable from "../../components/shared/controls/useTable";
 import * as employeeService from "../../services/employeeService";
 import TableRow from "@mui/material/TableRow";
@@ -11,6 +11,9 @@ import { Controls } from "../../components/shared/controls/Controls";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 import EmployeeForm from "./EmployeeForm";
+import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
+import ClearIcon from '@mui/icons-material/Clear';
+import Notification from '../../components/shared/Notification'
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -31,13 +34,17 @@ const headCells = [
   { id: "email", label: "Email Address" },
   { id: "mobile", label: "Mobile Number" },
   { id: "department", label: "Department", disableSorting: true },
+  {id:'actions',label:'Actions', disableSorting: true}
 ];
 
 const EmployeeList = () => {
-  const classes = useStyles();
-  const [openPopup, setOpenPopup] = useState(false);
 
+  const classes = useStyles();
+
+  const [openPopup, setOpenPopup] = useState(false);
+  const[notify,setNotify] = useState({isOpen:false,message:'',type:''});
   const [records, setRecords] = useState(employeeService.getAllEmployees());
+  const[recordForEdit,setRecordForEdit]= useState(null);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -60,6 +67,44 @@ const EmployeeList = () => {
     });
   };
 
+  const addOrEdit = (employee,resetForm) => {
+
+    if(employee.id == 0)
+        employeeService.insertEmployee(employee)
+    else
+        employeeService.updateEmployee(employee)
+    
+    
+    resetForm();
+    setRecordForEdit(null);
+    setOpenPopup(false);
+    setRecords(employeeService.getAllEmployees());
+    setNotify({
+        isOpen:true,
+        message:'This is a success message!',
+        type:'success',})
+
+  }
+
+  const openInPopUp = (item) => {
+
+      setRecordForEdit(item);
+      setOpenPopup(true);
+  }
+
+  const onDelete = (id) => {
+      if(window.confirm('Are you sure')){
+      
+      employeeService.deleteEmployee(id);
+      setRecords(employeeService.getAllEmployees());
+      setNotify({
+        isOpen:true,
+        message:'This is a success message!',
+        type:'error',})
+    }
+      
+  }
+
   return (
     <>
       <Toolbar>
@@ -79,7 +124,7 @@ const EmployeeList = () => {
         className={classes.newButton}
           startIcon={<AddIcon />}
           text="Add New"
-          onClick={() => setOpenPopup(true)}
+          onClick={() => {setOpenPopup(true);setRecordForEdit(null);}}
         ></Controls.MyButton>
       </Toolbar>
       <TblContainer>
@@ -92,6 +137,20 @@ const EmployeeList = () => {
               <TableCell>{item.email}</TableCell>
               <TableCell>{item.mobile}</TableCell>
               <TableCell>{item.department}</TableCell>
+              <TableCell>
+                  <Controls.ActionButton
+                  color="primary"
+                  onClick={() => openInPopUp(item)}
+                  >
+                    <ModeEditOutlineIcon fontSize="small" />
+                  </Controls.ActionButton>
+                  <Controls.ActionButton
+                  color="secondary"
+                  onClick={() => onDelete(item.id)}
+                  >
+                    <ClearIcon fontSize="small" />
+                  </Controls.ActionButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -103,8 +162,15 @@ const EmployeeList = () => {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <EmployeeForm />
+        <EmployeeForm
+        addOrEdit={addOrEdit} 
+        recordForEdit={recordForEdit}
+        />
       </Controls.MyPopup>
+      <Notification
+        notify={notify}
+        setNotify={setNotify}
+      ></Notification>
     </>
   );
 };
