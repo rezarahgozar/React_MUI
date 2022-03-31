@@ -5,7 +5,6 @@ import React from "react";
 import "./App.css";
 import Header from "./components/shared/Header";
 import SideMenu from "./components/shared/SideMenu";
-
 import Employees from "./pages/employees/Employees";
 
 const theme = createTheme({
@@ -44,10 +43,11 @@ function App() {
 
   return (
     <ThemeProvider theme={theme}>
-      <SideMenu />
+      <SideMenu>
+        
+      </SideMenu>
       <div className={classes.appMain}>
         <Header />
-
         <Employees />
       </div>
       <CssBaseline />

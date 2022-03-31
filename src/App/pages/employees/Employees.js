@@ -1,9 +1,11 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import EmployeeForm from "./EmployeeForm";
 import PageHeader from "../../components/shared/PageHeader";
 import HubIcon from "@mui/icons-material/Hub";
 import { Paper } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import EmployeeList from "./EmployeeList";
+import * as employeeService from "../../services/employeeService";
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -14,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
 
 const Employees = () => {
   const classes = useStyles();
+  const [records,setRecords] = useState(employeeService.getAllEmployees());
+
+  const addOrEdit = (employee,resetForm) => {
+    
+  }
 
   return (
     <>
@@ -23,7 +30,8 @@ const Employees = () => {
         icon={<HubIcon fontSize="large" />}
       />
       <Paper className={classes.pageContent}>
-        <EmployeeForm />
+        {/* <EmployeeForm /> */}
+        <EmployeeList />
       </Paper>
     </>
   );

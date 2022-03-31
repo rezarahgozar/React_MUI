@@ -4,6 +4,8 @@ import MySelect from './MySelect'
 import MyCheckBox from "./MyCheckBox";
 import MyDatePicker from './MyDatePicker';
 import MyButton from './MyButton'
+import MyPopup from './MyPopup'
+import ActionButton from './ActionButton'
 
 export const Controls = {
   MyInput,
@@ -11,5 +13,7 @@ export const Controls = {
   MySelect,
   MyCheckBox,
   MyDatePicker,
-  MyButton
+  MyButton,
+  MyPopup,
+  ActionButton
 };

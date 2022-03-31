@@ -7,6 +7,7 @@ import {
   TextField,
   Radio,
 } from "@mui/material";
+import { getDayOfYear } from "date-fns";
 import React, { useState, useEffect } from "react";
 import { Controls } from "../../components/shared/controls/Controls";
 import { useForm, Form } from "../../components/shared/useForm";
@@ -76,28 +77,28 @@ const EmployeeForm = () => {
             <Controls.MyInput
               name="fullName"
               label="Full Name"
-              Value={values.fullName}
+              value={values.fullName}
               onChange={handleInputChange}
               error={errors.fullName}
             />
             <Controls.MyInput
               name="email"
               label="Email"
-              Value={values.email}
+              value={values.email}
               onChange={handleInputChange}
               error={errors.email}
             />
             <Controls.MyInput
               name="mobile"
               label="Mobile"
-              Value={values.mobile}
+              value={values.mobile}
               onChange={handleInputChange}
               error={errors.mobile}
             />
             <Controls.MyInput
               name="city"
               label="City"
-              Value={values.city}
+              value={values.city}
               onChange={handleInputChange}
             />
           </Grid>
@@ -123,12 +124,7 @@ const EmployeeForm = () => {
               value={values.hireDate}
               onChange={handleInputChange}
             />
-            <Controls.MyCheckBox
-              name="isPermanent"
-              label="Permanent Employee"
-              value={values.isPermanent}
-              onChange={handleInputChange}
-            />
+           
             <div>
                 <Controls.MyButton type="submit" variant="contained" color="primary" size="large" text="Submit" />
                 <Controls.MyButton color="default" text="Reset" onClick={resetForm} />
@@ -136,6 +132,7 @@ const EmployeeForm = () => {
           </Grid>
         </Grid>
       </Form>
+
     </>
   );
 };
