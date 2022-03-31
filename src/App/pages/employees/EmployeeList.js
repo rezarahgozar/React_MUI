@@ -13,7 +13,8 @@ import AddIcon from "@mui/icons-material/Add";
 import EmployeeForm from "./EmployeeForm";
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import ClearIcon from '@mui/icons-material/Clear';
-import Notification from '../../components/shared/Notification'
+import Notification from '../../components/shared/Notification';
+import MyConfirmDialog from '../../components/shared/controls/MyConfirmDialog';
 
 const useStyles = makeStyles((theme) => ({
   pageContent: {
@@ -41,10 +42,11 @@ const EmployeeList = () => {
 
   const classes = useStyles();
 
+  const [confirmDialog, setConfirmDialog] = useState({isOpen:false,title:'',subTitle:''});
   const [openPopup, setOpenPopup] = useState(false);
-  const[notify,setNotify] = useState({isOpen:false,message:'',type:''});
+  const [notify,setNotify] = useState({isOpen:false,message:'',type:''});
   const [records, setRecords] = useState(employeeService.getAllEmployees());
-  const[recordForEdit,setRecordForEdit]= useState(null);
+  const [recordForEdit,setRecordForEdit]= useState(null);
   const [filterFn, setFilterFn] = useState({
     fn: (items) => {
       return items;
@@ -93,15 +95,15 @@ const EmployeeList = () => {
   }
 
   const onDelete = (id) => {
-      if(window.confirm('Are you sure')){
-      
+
+        setConfirmDialog({...confirmDialog,isOpen:false})
+        
       employeeService.deleteEmployee(id);
       setRecords(employeeService.getAllEmployees());
       setNotify({
         isOpen:true,
         message:'This is a success message!',
         type:'error',})
-    }
       
   }
 
@@ -146,7 +148,16 @@ const EmployeeList = () => {
                   </Controls.ActionButton>
                   <Controls.ActionButton
                   color="secondary"
-                  onClick={() => onDelete(item.id)}
+                  onClick={() => {
+                      //onDelete(item.id)
+                      setConfirmDialog({
+
+                        isOpen:true,
+                        title:'are you sure to delete this record ?',
+                        subTitle:'you can not undo this operation',
+                        onConfirm:() => {onDelete(item.id)}
+                    })       
+                    }}
                   >
                     <ClearIcon fontSize="small" />
                   </Controls.ActionButton>
@@ -171,6 +182,13 @@ const EmployeeList = () => {
         notify={notify}
         setNotify={setNotify}
       ></Notification>
+
+      <MyConfirmDialog 
+      confirmDialog={confirmDialog}
+      setConfirmDialog={setConfirmDialog}
+      >
+
+      </MyConfirmDialog>
     </>
   );
 };
